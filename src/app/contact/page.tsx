@@ -1,28 +1,31 @@
 import type { Metadata } from "next";
+import { EmailInquiry } from "@/components/contact/email-inquiry";
+import { LocationCard } from "@/components/contact/location-card";
+import { MapsPlaceholder } from "@/components/contact/maps-placeholder";
 import { SectionHeader } from "@/components/ui/section-header";
+import { locations } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Connect with Ambika Home Decor for personalized interior consultations.",
+  description:
+    "Visit Ambica Rexine and Ambica Home Decor in Bardoli. Call, WhatsApp, or email for design consultations.",
 };
 
 export default function ContactPage() {
   return (
-    <section className="space-y-8">
+    <div className="space-y-16 pb-8">
       <SectionHeader
-        title="Contact"
-        description="Contact structure for consultation requests, showroom details, and design inquiries."
+        eyebrow="Get in Touch"
+        title="We welcome you to our Bardoli showrooms"
+        description="Two destinations for rexine, furnishings, and bespoke interiors — reach us by phone, WhatsApp, or email for personalized guidance."
       />
-      <div className="grid gap-4 sm:grid-cols-2">
-        <article className="rounded-2xl border border-border bg-card p-6">
-          <h3 className="font-display text-2xl">Showroom</h3>
-          <p className="mt-2 text-foreground/75">Surat, Gujarat · By appointment</p>
-        </article>
-        <article className="rounded-2xl border border-border bg-card p-6">
-          <h3 className="font-display text-2xl">Inquiries</h3>
-          <p className="mt-2 text-foreground/75">hello@ambikahomedecor.in</p>
-        </article>
+      <div className="grid gap-6 lg:grid-cols-2">
+        {locations.map((location) => (
+          <LocationCard key={location.id} location={location} />
+        ))}
       </div>
-    </section>
+      <MapsPlaceholder />
+      <EmailInquiry />
+    </div>
   );
 }

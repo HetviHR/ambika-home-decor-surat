@@ -1,33 +1,30 @@
 import type { Metadata } from "next";
-import { SectionHeader } from "@/components/ui/section-header";
+import { Suspense } from "react";
+import { CollectionBrowser } from "@/components/catalog/collection-browser";
 
 export const metadata: Metadata = {
   title: "Collection",
-  description: "Explore curated luxury decor collections crafted for refined spaces.",
+  description:
+    "Browse our luxury home decor catalogue — filter by category, material, and style. Bath accessories, curtains, mattresses, sofas, wallpapers, and more.",
 };
 
-const collectionCategories = ["Living", "Bedroom", "Dining", "Accent Decor"];
+function CollectionFallback() {
+  return (
+    <div className="space-y-8 pb-12">
+      <div className="h-32 animate-pulse rounded-2xl bg-cream" />
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="aspect-[4/5] animate-pulse rounded-2xl bg-cream" />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function CollectionPage() {
   return (
-    <section className="space-y-8">
-      <SectionHeader
-        title="Collection"
-        description="A scalable collection page structure for curated product families and editorial lookbooks."
-      />
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {collectionCategories.map((category) => (
-          <article
-            key={category}
-            className="rounded-2xl border border-border bg-card p-6"
-          >
-            <h3 className="font-display text-2xl">{category}</h3>
-            <p className="mt-2 text-sm text-foreground/70">
-              Showcase placeholder for premium {category.toLowerCase()} range.
-            </p>
-          </article>
-        ))}
-      </div>
-    </section>
+    <Suspense fallback={<CollectionFallback />}>
+      <CollectionBrowser />
+    </Suspense>
   );
 }
