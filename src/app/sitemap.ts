@@ -1,11 +1,12 @@
 import type { MetadataRoute } from "next";
-import { products } from "@/data/products";
+import { getProducts } from "@/lib/catalog";
 
 const routes = ["", "/collection", "/gallery", "/about", "/contact"];
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://ambikahomedecor.in";
   const now = new Date();
+  const products = await getProducts();
 
   const staticPages = routes.map((route) => ({
     url: `${baseUrl}${route}`,

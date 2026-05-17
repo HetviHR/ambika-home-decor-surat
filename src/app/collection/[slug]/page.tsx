@@ -4,17 +4,18 @@ import { notFound } from "next/navigation";
 import { ProductGallery } from "@/components/catalog/product-gallery";
 import { ProductInquiryForm } from "@/components/catalog/product-inquiry-form";
 import { ProductCard } from "@/components/catalog/product-card";
-import { buildWhatsAppUrl, getProductBySlug, getRelatedProducts, products } from "@/lib/catalog";
+import { buildWhatsAppUrl, getProductBySlug, getProducts, getRelatedProducts } from "@/lib/catalog";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
+  const products = await getProducts();
   return products.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
   if (!product) return { title: "Product" };
   return {
     title: product.name,
@@ -24,10 +25,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProductPage({ params }: Props) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
   if (!product) notFound();
 
-  const related = getRelatedProducts(product);
+  const related = await getRelatedProducts(product);
   const whatsapp = buildWhatsAppUrl(product);
 
   return (

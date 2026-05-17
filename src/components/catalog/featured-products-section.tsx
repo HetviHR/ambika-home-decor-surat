@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { featuredProducts } from "@/lib/catalog";
+import { getFeaturedProducts } from "@/lib/catalog";
 import { ProductCard } from "@/components/catalog/product-card";
 import { SectionHeader } from "@/components/ui/section-header";
 
-export function FeaturedProductsSection() {
-  const items = featuredProducts.slice(0, 8);
+export async function FeaturedProductsSection() {
+  const items = await getFeaturedProducts(8);
 
   return (
     <section className="relative mx-auto max-w-[1400px] px-4 py-20 sm:px-6 lg:px-8">
@@ -21,11 +21,17 @@ export function FeaturedProductsSection() {
           View catalogue
         </Link>
       </div>
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {items.map((product, index) => (
-          <ProductCard key={product.id} product={product} priority={index < 4} />
-        ))}
-      </div>
+      {items.length > 0 ? (
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {items.map((product, index) => (
+            <ProductCard key={product.id} product={product} priority={index < 4} />
+          ))}
+        </div>
+      ) : (
+        <p className="rounded-2xl border border-border bg-cream/40 p-8 text-center font-sans text-sm text-dark/60">
+          No featured pieces are available right now.
+        </p>
+      )}
     </section>
   );
 }

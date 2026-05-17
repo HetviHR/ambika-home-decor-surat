@@ -11,7 +11,7 @@ export type Product = {
   images: string[];
   folder: string;
   style: string;
-  price: null;
+  price: number | null;
   tags: string[];
   whatsappNumber: string;
 };

@@ -2,15 +2,15 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import type { SortOption } from "@/types/product";
-import { filterProducts, getFilterOptions, products } from "@/lib/catalog";
+import type { Product, SortOption } from "@/types/product";
+import { filterProducts, getFilterOptions } from "@/lib/catalog";
 import { ProductCard } from "@/components/catalog/product-card";
 import { ImageLightbox } from "@/components/catalog/image-lightbox";
 import { SectionHeader } from "@/components/ui/section-header";
 
 const PAGE_SIZE = 12;
 
-export function CollectionBrowser() {
+export function CollectionBrowser({ products }: { products: Product[] }) {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("category");
 
@@ -22,7 +22,7 @@ export function CollectionBrowser() {
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [preview, setPreview] = useState<{ src: string; alt: string } | null>(null);
 
-  const { materials, styles, categories } = useMemo(() => getFilterOptions(), []);
+  const { materials, styles, categories } = useMemo(() => getFilterOptions(products), [products]);
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -31,14 +31,14 @@ export function CollectionBrowser() {
 
   const filtered = useMemo(
     () =>
-      filterProducts({
+      filterProducts(products, {
         search,
         category,
         material,
         style,
         sort,
       }),
-    [search, category, material, style, sort],
+    [products, search, category, material, style, sort],
   );
 
   const visible = filtered.slice(0, visibleCount);
@@ -177,7 +177,11 @@ export function CollectionBrowser() {
         </div>
       </div>
 
-      {filtered.length === 0 ? (
+      {products.length === 0 ? (
+        <p className="py-16 text-center font-sans text-dark/60">
+          No catalogue items are available right now.
+        </p>
+      ) : filtered.length === 0 ? (
         <p className="py-16 text-center font-sans text-dark/60">
           No pieces match your filters. Try adjusting search or categories.
         </p>

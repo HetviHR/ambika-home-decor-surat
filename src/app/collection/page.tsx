@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { CollectionBrowser } from "@/components/catalog/collection-browser";
+import { getProducts } from "@/lib/catalog";
 
 export const metadata: Metadata = {
   title: "Collection",
@@ -21,10 +22,16 @@ function CollectionFallback() {
   );
 }
 
+async function CollectionContent() {
+  const products = await getProducts();
+
+  return <CollectionBrowser products={products} />;
+}
+
 export default function CollectionPage() {
   return (
     <Suspense fallback={<CollectionFallback />}>
-      <CollectionBrowser />
+      <CollectionContent />
     </Suspense>
   );
 }
